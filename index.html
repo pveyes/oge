@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>oge: Page metadata as a service</title>
+  <meta name="description"
+    content="oge is a page metadata as a service. It parses and normalizes Document metadata, Open Graph, Twitter Card, and Linked Data from any pages and return easily consumable JSON." />
+  <meta name="keywords" content="oge, page, metadata, meta, open graph, twitter card, linked data, json" />
+  <meta property="og:image"
+    content="https://og-image.now.sh/**Page%20metadata**%20as%20a%20service.png?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.zeit.co%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fzeit-black-triangle.svg&images=https%3A%2F%2Foge.now.sh%2Fstatic%2Flogo.png&widths=100&widths=250&heights=undefined&heights=250" />
+  <link rel="icon" href="/static/favicon.svg" />
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+
+    :root {
+      --text-color: #0a1521;
+      --bg-color: #e0eaf5;
+      --accent-color: #f45d01;
+
+      --absolute-bg-color: #0a1521;
+      --absolute-text-color: #e0eaf5;
+      --input-bg-color: #ffffff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #0a1521;
+        --text-color: #e0eaf5;
+
+        --input-bg-color: #e0eaf5;
+      }
+    }
+
+    body {
+      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+    }
+
+    *,
+    *::after,
+    *::before {
+      box-sizing: border-box;
+    }
+
+    @media not all and (hover: hover) {
+      .desktop {
+        display: none;
+      }
+    }
+
+    #main {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      height: 100vh;
+      display: flex;
+      align-items: stretch;
+      flex-direction: column;
+      padding: 20px 20px;
+    }
+
+    picture {
+      text-align: center;
+    }
+
+    p {
+      line-height: 1.5;
+    }
+
+    a {
+      color: #2d7dd2;
+      outline-color: #2d7dd2;
+    }
+
+    pre,
+    code {
+      font-family: Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
+    }
+
+    pre {
+      background-color: var(--absolute-bg-color);
+      color: var(--absolute-text-color);
+      border: 1px solid rgba(255 255 255 / 10%);
+      padding: 10px;
+      margin: 0;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+
+    pre>code.cli::before {
+      content: "$ ";
+      color: var(--accent-color)
+    }
+
+    pre>code>span:first-child {
+      color: #97cc04;
+    }
+
+    code #url {
+      color: hsl(211, 51%, 72%);
+    }
+
+    code:not(.block) {
+      color: var(--accent-color);
+    }
+
+    code:not(.block)::before,
+    code:not(.block)::after {
+      content: "`";
+    }
+
+    #app {
+      margin: 20px 0;
+    }
+
+    form {
+      width: 100%;
+    }
+
+    form div {
+      display: flex;
+      width: 100%;
+    }
+
+    form pre {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      letter-spacing: 0px;
+      margin-bottom: 5px;
+    }
+
+    input {
+      margin: 0;
+      height: 40px;
+      padding: 10px 7px;
+      flex-grow: 1;
+      margin-right: 10px;
+      border: 1px solid hsl(211, 51%, 72%);
+      border-radius: 3px;
+      font-size: 0.8rem;
+      background-color: var(--input-bg-color);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    button:focus {
+      outline-color: var(--accent-color);
+    }
+
+    button {
+      font-size: 0.8em;
+      height: 40px;
+      padding: 5px 10px;
+      border: 0;
+      background-color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      border-radius: 3px;
+      color: #ffffff;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #df5601;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="main">
+    <picture>
+      <source srcset="/static/logo.svg" media="(prefers-color-scheme: light)" />
+      <source srcset="/static/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+      <img id="logo" src="/static/logo.svg" width="200" height="200" alt="OGE logo" />
+    </picture>
+    <p><code>oge</code> is a page metadata as a service. It parses and normalizes <a rel="noreferrer nofollow"
+        href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta">Document metadata</a>, <a
+        href="https://ogp.me/">Open Graph</a>, <a
+        href="https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/markup">Twitter Card</a>,
+      and <a href="https://json-ld.org/">Linked Data</a> from any pages and return easily consumable JSON. You can try
+      it below:</p>
+    <div id="app">
+      <!-- SSR -->
+      <form method="GET" action="/api">
+        <label for="url">Enter URL:</label>
+        <div>
+          <input id="url" name="url" type="text" placeholder="e.g: https://fatihkalifa.com/experiment" />
+          <button type="submit">Get Metadata</button>
+        </div>
+      </form>
+    </div>
+    <div class="desktop">
+      <p>You can also use your favorite HTTP client:</p>
+      <pre><code class="block cli" id="curl"><span>curl</span> https://oge.now.sh/api?url=<span id="url">$URL</span></code></pre>
+    </div>
+  </div>
+  <script type="module">
+    import { h, Component, render } from 'https://unpkg.com/preact@latest?module';
+    import { useState } from 'https://unpkg.com/preact@latest/hooks/dist/hooks.module.js?module';
+    import htm from 'https://unpkg.com/htm?module';
+
+    const html = htm.bind(h);
+
+    function App() {
+      const [url, setURL] = useState('');
+      const [result, setResult] = useState({
+        state: 'init',
+      });
+
+      function handleInput(e) {
+        const url = e.target.value;
+        setURL(url);
+        if (url === '') {
+          setResult({ state: 'init' })
+        }
+        window.dispatchEvent(new CustomEvent('url-input', { detail: { url } }))
+      }
+
+      async function handleSubmit(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        setResult({
+          state: 'loading',
+        })
+        const res = await fetch(`/api?url=${url}`);
+        const json = await res.json();
+        setResult({
+          state: 'loaded',
+          data: json,
+        });
+      }
+
+      return html`
+        <form method="GET" action="/api" onSubmit=${handleSubmit}>
+          <label for="url">Enter URL:</label>
+          <div>
+            <input
+              id="url"
+              name="url"
+              type="url"
+              placeholder="e.g: https://fatihkalifa.com/experiment"
+              value=${url}
+              onInput=${handleInput}
+            />
+            <button type="submit" onClick=${handleSubmit}>Get Metadata</button>
+          </div>
+          ${result.state === 'loading' && html`<div>Loading...</div>`}
+          <!-- TODO use JSON tree viewer -->
+          ${result.state === 'loaded' && html`
+            <pre>
+              <code class="block">${JSON.stringify(result.data, null, 2)}</code>
+            </pre>
+          `}
+        </form>
+      `;
+    }
+
+    render(html`<${App} />`, document.querySelector('#app'));
+
+    window.addEventListener('url-input', e => {
+      const url = e.detail.url || '$URL';
+      document.querySelector('code #url').innerHTML = url;
+    }, false);
+
+    window.metrical = { "app": "5bYi95VvH" }
+  </script>
+  <script async src="https://cdn.metrical.xyz/script.js" type="text/javascript"></script>
+</body>
+
+</html>
