@@ -130,7 +130,8 @@ export default async function handler(req: NowRequest, res: NowResponse) {
     }
   }
 
-  const title = $('head title').text();
+  const ogTitle = getMetaByProperty('og:title');
+  const title = ogTitle ?? $('head title').text();
   const description = getMetaByName('description');
   const language = $('html').attr('lang') ?? 'en';
   const metaKeywords = getMetaByName('keywords');
@@ -280,7 +281,7 @@ export default async function handler(req: NowRequest, res: NowResponse) {
     publication: getPublication(),
     // raw data
     og: {
-      title: getMetaByProperty('og:title'),
+      title: ogTitle,
       description: getMetaByProperty('og:description'),
       type: getMetaByProperty('og:type'),
       url: getMetaByProperty('og:url'),
