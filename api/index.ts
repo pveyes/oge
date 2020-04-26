@@ -130,7 +130,7 @@ export default async function handler(req: NowRequest, res: NowResponse) {
     }
   }
 
-  const title = $('title').text();
+  const title = $('head title').text();
   const description = getMetaByName('description');
   const language = $('html').attr('lang') ?? 'en';
   const metaKeywords = getMetaByName('keywords');
