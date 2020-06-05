@@ -111,7 +111,22 @@ export default async function handler(req: NowRequest, res: NowResponse) {
     return;
   }
 
-  const data = await got(url);
+  let data;
+
+  try {
+    data = await got(url, {
+      headers: {
+        Accept: 'text/html'
+      },
+      followRedirect: true
+    });
+  } catch (err) {
+    const errorMessage = `Cannot fetch ${url}`;
+    res.status(500);
+    res.json({ error: errorMessage, originResponse: err.response });
+    return;
+  }
+
   const $ = cheerio.load(data.body);
 
   function getMetaByName(value: string) {
