@@ -1,2 +1,4 @@
 .now
 node_modules/
+
+.vercel

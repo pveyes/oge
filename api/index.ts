@@ -1,4 +1,5 @@
-import { NowRequest, NowResponse } from '@now/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
 import got from 'got';
 import cheerio from 'cheerio';
 
@@ -100,7 +101,7 @@ type LinkedData = Partial<{
 
 }>
 
-export default async function handler(req: NowRequest, res: NowResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   const url = req.query.url as string;
 
   try {
@@ -116,14 +117,19 @@ export default async function handler(req: NowRequest, res: NowResponse) {
   try {
     data = await got(url, {
       headers: {
-        Accept: 'text/html'
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        Pragma: 'no-cache',
+        Referer: 'https://oge.vercel.app/',
+        'Cache-Control': 'no-cache',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.53 Safari/537.36 Edg/103.0.1264.37',
       },
       followRedirect: true
     });
-  } catch (err) {
+  } catch (err: any) {
     const errorMessage = `Cannot fetch ${url}`;
     res.status(500);
-    res.json({ error: errorMessage, originResponse: err.response });
+    res.json({ error: errorMessage, originResponse: err });
     return;
   }
 
