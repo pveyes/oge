@@ -204,7 +204,7 @@
   <main class="wrap">
     <section class="hero">
       <h1>Page metadata as a service</h1>
-      <p><code>oge</code> parses and normalizes <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta">Document metadata</a>, <a href="https://ogp.me/">Open Graph</a>, <a href="https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/markup">Twitter Card</a>, and <a href="https://json-ld.org/">Linked Data</a> from any page and returns easily consumable JSON. You can try it below:</p>
+      <p><code>oge</code> parses and normalizes <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta">Document metadata</a>, <a href="https://ogp.me/">Open Graph</a>, <a href="https://web.archive.org/web/2023/https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/markup">Twitter Card</a>, and <a href="https://json-ld.org/">Linked Data</a> from any page and returns easily consumable JSON. You can try it below:</p>
       <form class="try" id="try" method="GET" action="/api">
         <label for="url">Enter URL:</label>
         <input id="url" name="url" type="url" required placeholder="e.g: https://fatihkalifa.com/experiment" value="https://fatihkalifa.com" />
@@ -226,16 +226,17 @@
         <table>
           <thead><tr><th>Field</th><th>Source</th></tr></thead>
           <tbody>
-            <tr><th>title</th><td><code>og:title</code><code>&lt;title&gt;</code></td></tr>
-            <tr><th>description</th><td><code>meta description</code></td></tr>
-            <tr><th>image</th><td><code>og:image</code><code>twitter:image</code><code>JSON-LD image</code><code>first &lt;img&gt;</code></td></tr>
-            <tr><th>keywords</th><td><code>meta keywords</code><code>JSON-LD keywords</code></td></tr>
-            <tr><th>author</th><td><code>JSON-LD author</code><code>JSON-LD Person</code><code>twitter:creator</code></td></tr>
-            <tr><th>publication</th><td><code>JSON-LD publisher</code><code>JSON-LD WebSite</code></td></tr>
+            <tr><th>title</th><td><code>og:title</code><code>twitter:title</code><code>&lt;title&gt;</code></td></tr>
+            <tr><th>description</th><td><code>meta description</code><code>og:description</code><code>twitter:description</code><code>JSON-LD description</code></td></tr>
+            <tr><th>image</th><td><code>og:image</code><code>og:image:url</code><code>og:image:secure_url</code><code>twitter:image</code><code>JSON-LD image</code><code>first &lt;img&gt;</code></td></tr>
+            <tr><th>keywords</th><td><code>meta keywords</code><code>article:tag</code><code>JSON-LD keywords</code></td></tr>
+            <tr><th>author</th><td><code>JSON-LD author</code><code>JSON-LD Person</code><code>meta author</code><code>twitter:creator</code></td></tr>
+            <tr><th>publication</th><td><code>JSON-LD publisher</code><code>JSON-LD WebSite</code><code>og:site_name</code><code>application-name</code></td></tr>
             <tr><th>publishedDate</th><td><code>article:published_time</code><code>JSON-LD datePublished</code></td></tr>
-            <tr><th>modifiedDate</th><td><code>article:modified_time</code><code>JSON-LD dateModified</code></td></tr>
+            <tr><th>modifiedDate</th><td><code>article:modified_time</code><code>og:updated_time</code><code>JSON-LD dateModified</code></td></tr>
             <tr><th>createdDate</th><td><code>JSON-LD dateCreated</code></td></tr>
-            <tr><th>language</th><td><code>&lt;html lang&gt;</code>, or <code>en</code> when missing</td></tr>
+            <tr><th>expirationDate</th><td><code>article:expiration_time</code><code>JSON-LD expires</code></td></tr>
+            <tr><th>language</th><td><code>&lt;html lang&gt;</code><code>og:locale</code><code>JSON-LD inLanguage</code>, or <code>en</code> when missing</td></tr>
           </tbody>
         </table>
       </div>
