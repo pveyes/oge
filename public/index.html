@@ -189,6 +189,40 @@
     button:hover {
       background-color: #df5601;
     }
+    .json-tree {
+      margin: 0;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      background-color: var(--absolute-bg-color);
+      color: var(--absolute-text-color);
+    }
+
+    .json-tree ul {
+      list-style: none;
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .json-tree .toggle {
+      all: unset;
+      cursor: pointer;
+      color: var(--accent-color);
+      display: inline-block;
+      width: 1rem;
+      margin-left: -1rem;
+      text-align: center;
+    }
+
+    .json-tree .key { color: #8ec5ff; }
+    .json-tree .hint { opacity: 0.5; }
+    .json-tree .string { color: #a5e075; }
+    .json-tree .number { color: #f0b86e; }
+    .json-tree .boolean { color: #d79df0; }
+    .json-tree .null { opacity: 0.6; }
+
   </style>
 </head>
 
@@ -226,6 +260,42 @@
     import htm from 'https://unpkg.com/htm?module';
 
     const html = htm.bind(h);
+
+    function JsonValue({ name, value, depth }) {
+      const isObject = value !== null && typeof value === 'object';
+      const [open, setOpen] = useState(depth < 2);
+      const label = name !== undefined && html`<span class="key">${JSON.stringify(name)}</span>: `;
+
+      if (!isObject) {
+        const type = value === null ? 'null' : typeof value;
+        return html`<li>${label}<span class=${type}>${JSON.stringify(value)}</span></li>`;
+      }
+
+      const isArray = Array.isArray(value);
+      const entries = Object.entries(value);
+      const [start, end] = isArray ? ['[', ']'] : ['{', '}'];
+
+      return html`
+        <li>
+          ${entries.length > 0 && html`
+            <button type="button" class="toggle" aria-expanded=${open} onClick=${() => setOpen(!open)}>
+              ${open ? '▾' : '▸'}
+            </button>
+          `}
+          ${label}${start}
+          ${open && entries.length > 0
+            ? html`
+              <ul>${entries.map(([k, v]) => html`<${JsonValue} name=${isArray ? undefined : k} value=${v} depth=${depth + 1} />`)}</ul>
+              ${end}
+            `
+            : html`<span class="hint">${entries.length > 0 ? ` ${entries.length} ${isArray ? 'item' : 'key'}${entries.length === 1 ? '' : 's'} ` : ''}</span>${end}`}
+        </li>
+      `;
+    }
+
+    function JsonTree({ data }) {
+      return html`<ul class="json-tree"><${JsonValue} value=${data} depth=${0} /></ul>`;
+    }
 
     function App() {
       const [url, setURL] = useState('');
@@ -271,12 +341,7 @@
             <button type="submit" onClick=${handleSubmit}>Get Metadata</button>
           </div>
           ${result.state === 'loading' && html`<div>Loading...</div>`}
-          <!-- TODO use JSON tree viewer -->
-          ${result.state === 'loaded' && html`
-            <pre>
-              <code class="block">${JSON.stringify(result.data, null, 2)}</code>
-            </pre>
-          `}
+          ${result.state === 'loaded' && html`<${JsonTree} data=${result.data} />`}
         </form>
       `;
     }
