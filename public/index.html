@@ -200,6 +200,7 @@
       color: var(--absolute-text-color);
     }
 
+    .json-tree,
     .json-tree ul {
       list-style: none;
       margin: 0;
@@ -255,9 +256,9 @@
     </div>
   </div>
   <script type="module">
-    import { h, Component, render } from 'https://unpkg.com/preact@latest?module';
-    import { useState } from 'https://unpkg.com/preact@latest/hooks/dist/hooks.module.js?module';
-    import htm from 'https://unpkg.com/htm?module';
+    import { h, Component, render } from 'https://esm.sh/preact@10.24.3';
+    import { useState } from 'https://esm.sh/preact@10.24.3/hooks';
+    import htm from 'https://esm.sh/htm@3.1.1';
 
     const html = htm.bind(h);
 
