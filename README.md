@@ -10,7 +10,7 @@
 ## Usage
 
 ```bash
-curl https://oge.vercel.app/api?url=$URL
+curl https://oge.fatihkalifa.com/api?url=$URL
 ```
 
 Replace `$URL` with any valid URL.
